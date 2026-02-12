@@ -15,7 +15,8 @@ import {
   Wallet,
   Plus,
   Download,
-  TrendingUp
+  TrendingUp,
+  LogOut
 } from 'lucide-react';
 
 const MetricsGrid = lazy(() => import('../components/dashboard/MetricsGrid'));
@@ -45,6 +46,15 @@ import {
 
 export default function Dashboard() {
   const { user } = useAuth();
+  const handleLogout = async () => {
+  try {
+    await supabase.auth.signOut();
+    window.location.href = "/login";
+  } catch (err) {
+    toast.error("Erro ao sair da conta");
+  }
+};
+
   const [activeTab, setActiveTab] = useState('dashboard');
   const [showTradeForm, setShowTradeForm] = useState(false);
   const [showAccountForm, setShowAccountForm] = useState(false);
@@ -169,6 +179,16 @@ export default function Dashboard() {
               <div><h1 className="text-xl font-bold text-white">Trading Journal</h1></div>
             </div>
             <div className="flex items-center gap-3">
+              <Button
+  size="sm"
+  variant="destructive"
+  className="flex items-center gap-2"
+  onClick={handleLogout}
+>
+  <LogOut className="w-4 h-4" />
+  Logout
+</Button>
+
               <Suspense fallback={<div className="w-48 h-10 bg-slate-900/40 rounded-md" />}> 
                 <AccountSelector accounts={accounts} selectedAccountId={selectedAccountId} onSelect={setSelectedAccountId} />
               </Suspense>
