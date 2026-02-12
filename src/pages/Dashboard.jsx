@@ -171,23 +171,38 @@ export default function Dashboard() {
   return (
     <div className="min-h-screen bg-slate-950">
       {/* Header principal removido (duplicado). Abaixo está o header único usado pela UI. */}
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <header className="sticky top-0 z-50 backdrop-blur-xl bg-slate-900/80 border-b border-slate-800">
-          <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="p-2 rounded-xl bg-emerald-600 shadow-lg shadow-emerald-500/20"><TrendingUp className="w-6 h-6 text-white" /></div>
-              <div><h1 className="text-xl font-bold text-white">Trading Journal</h1></div>
-            </div>
-            <div className="flex items-center gap-3">
-              <Button
-  size="sm"
-  variant="destructive"
-  className="flex items-center gap-2"
-  onClick={handleLogout}
->
-  <LogOut className="w-4 h-4" />
-  Logout
-</Button>
+<Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+  <header className="sticky top-0 z-50 backdrop-blur-xl bg-slate-900/80 border-b border-slate-800">
+    <div className="container mx-auto px-4 py-4 flex items-center justify-between">
+      <div className="flex items-center gap-3">
+        <div className="p-2 rounded-xl bg-emerald-600 shadow-lg shadow-emerald-500/20">
+          <TrendingUp className="w-6 h-6 text-white" />
+        </div>
+        <div>
+          <h1 className="text-xl font-bold text-white">Trading Journal</h1>
+        </div>
+      </div>
+
+      <div className="flex items-center gap-4">
+        
+        {/* Email do usuário logado */}
+        {user && (
+          <div className="text-slate-300 text-sm font-medium">
+            {user.email}
+          </div>
+        )}
+
+        {/* Botão Logout */}
+        <Button
+          size="sm"
+          variant="destructive"
+          className="flex items-center gap-2"
+          onClick={handleLogout}
+        >
+          <LogOut className="w-4 h-4" />
+          Logout
+        </Button>
+
 
               <Suspense fallback={<div className="w-48 h-10 bg-slate-900/40 rounded-md" />}> 
                 <AccountSelector accounts={accounts} selectedAccountId={selectedAccountId} onSelect={setSelectedAccountId} />
