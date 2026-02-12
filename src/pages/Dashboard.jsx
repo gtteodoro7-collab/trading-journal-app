@@ -138,35 +138,53 @@ export default function Dashboard() {
   };
 
   const handleCreateTrade = async (tradeData) => {
-    try {
-      const insertObj = {
-        user_id: user.id,
-        account_id: tradeData.accountId,
-        pair: tradeData.ativo,
-        direction: (tradeData.direction || '').toLowerCase(),
-        lot: tradeData.lotSize,
-        entry_price: tradeData.entryPrice,
-        exit_price: tradeData.exitPrice,
-        profit: tradeData.resultado,
-        result: (tradeData.tipo || '').toLowerCase(),
-        trade_date: tradeData.tradeDate,
-        notes: tradeData.notes || ''
-      };
-
-      const { data, error } = await supabase.from('trades').insert([insertObj]).select().single();
-      if (error) {
-        console.error('createTrade error', error);
-        toast.error('Erro ao salvar trade: ' + (error.message || 'desconhecido'));
-        return;
-      }
-      toast.success('Trade adicionado!');
-      refetchTrades();
-      setShowTradeForm(false);
-    } catch (e) {
-      console.error('createTrade exception', e);
-      toast.error('Erro ao salvar trade');
+  try {
+    // 🔒 Garantia de UUID válido
+    if (!user?.id) {
+      toast.error('Usuário não autenticado');
+      return;
     }
-  };
+
+    if (!tradeData?.accountId) {
+      toast.error('Selecione uma conta antes de salvar o trade');
+      return;
+    }
+
+    const insertObj = {
+      user_id: user.id,                 // UUID válido
+      account_id: tradeData.accountId,   // UUID válido
+      pair: tradeData.ativo,
+      direction: (tradeData.direction || '').toLowerCase(),
+      lot: tradeData.lotSize,
+      entry_price: tradeData.entryPrice,
+      exit_price: tradeData.exitPrice,
+      profit: tradeData.resultado,
+      result: (tradeData.tipo || '').toLowerCase(),
+      trade_date: tradeData.tradeDate,
+      notes: tradeData.notes || ''
+    };
+
+    const { data, error } = await supabase
+      .from('trades')
+      .insert([insertObj])
+      .select()
+      .single();
+
+    if (error) {
+      console.error('createTrade error', error);
+      toast.error('Erro ao salvar trade: ' + (error.message || 'desconhecido'));
+      return;
+    }
+
+    toast.success('Trade adicionado!');
+    refetchTrades();
+    setShowTradeForm(false);
+  } catch (e) {
+    console.error('createTrade exception', e);
+    toast.error('Erro ao salvar trade');
+  }
+};
+
 
   if (accountsLoading || tradesLoading) return <div className="min-h-screen bg-slate-950 flex items-center justify-center"><div className="w-8 h-8 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin"></div></div>;
 
