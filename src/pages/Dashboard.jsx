@@ -48,20 +48,15 @@ import {
 export default function Dashboard() {
   const { user } = useAuth();
   const navigate = useNavigate();
- const handleLogin = async (e) => {
-  e.preventDefault();
 
-  const { error } = await supabase.auth.signInWithPassword({
-    email,
-    password,
-  });
-
-  if (error) {
-    toast.error("Erro ao fazer login");
-  } else {
-    navigate("/");
-  }
-};
+  const handleLogout = async () => {
+    try {
+      await supabase.auth.signOut();
+      navigate("/login");
+    } catch (error) {
+      toast.error("Erro ao sair");
+    }
+  };
   const [activeTab, setActiveTab] = useState('dashboard');
   const [showTradeForm, setShowTradeForm] = useState(false);
   const [showAccountForm, setShowAccountForm] = useState(false);
