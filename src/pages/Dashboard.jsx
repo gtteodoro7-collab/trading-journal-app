@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import React, { useState, useMemo, lazy, Suspense } from 'react';
 import supabase from '../lib/supabaseClient';
 import { useAuth } from '../lib/AuthContext';
@@ -46,10 +47,11 @@ import {
 
 export default function Dashboard() {
   const { user } = useAuth();
-  const handleLogout = async () => {
+  const navigate = useNavigate();
+ const handleLogout = async () => {
   try {
     await supabase.auth.signOut();
-    window.location.href = "/login";
+    navigate("/login");
   } catch (err) {
     toast.error("Erro ao sair da conta");
   }
