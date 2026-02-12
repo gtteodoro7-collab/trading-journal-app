@@ -177,8 +177,11 @@ export default function Dashboard() {
     }
 
     toast.success('Trade adicionado!');
-    refetchTrades();
-    setShowTradeForm(false);
+refetchTrades();
+
+setTimeout(() => {
+  setShowTradeForm(false);
+}, 0);
   } catch (e) {
     console.error('createTrade exception', e);
     toast.error('Erro ao salvar trade');
